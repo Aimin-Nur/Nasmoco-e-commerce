@@ -8,18 +8,15 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
+import { useState } from 'react';
+import axios from 'axios'; 
 
 const formSchema = z.object({
     name: z.string().min(1),
 });
 
-
-const onSubmit = async (value: z.infer<typeof formSchema>) => {
-    console.log(value);
-};
-
-
  export const StoreModal = () => {
+    const [loading, setLoading] = useState(false)
 
     const storeModal = useStoreModal();
 
@@ -29,6 +26,16 @@ const onSubmit = async (value: z.infer<typeof formSchema>) => {
             name : "",
         },
     });
+
+    const onSubmit = async (values: z.infer<typeof formSchema>) => {
+        try {
+            setLoading(true);
+            const response = await axios.post("/api/stores", values);  
+            console.log(response.data);
+        } catch (error) {
+            console.log(error);
+        }
+    };
 
     return (
         <Modal
